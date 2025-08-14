@@ -1,5 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser, verifyOtp } from './authThunks';
+import {
+  loginUser,
+  registerUser,
+  verifyOtp,
+  forgotPassword,
+  verifyForgotPasswordOtp,
+  resetPassword,
+} from './authThunks';
 import {
   getToken,
   getUser,
@@ -41,6 +48,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
       // Register cases
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -56,6 +64,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
       // Verify OTP
       .addCase(verifyOtp.pending, (state) => {
         state.loading = true;
@@ -66,6 +75,49 @@ const authSlice = createSlice({
         state.successMessage = action.payload.message;
       })
       .addCase(verifyOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Forgot Password
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Verify Forgot Password OTP
+      .addCase(verifyForgotPasswordOtp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.successMessage = null;
+      })
+      .addCase(verifyForgotPasswordOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(verifyForgotPasswordOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Reset Password
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

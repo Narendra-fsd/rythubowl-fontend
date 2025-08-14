@@ -1,8 +1,11 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import OtpVerify from "../pages/auth/OtpVerify";
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from '../pages/auth/Login';
+import Register from '../pages/auth/Register';
+import OtpVerify from '../pages/auth/OtpVerify';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import ForgotPasswordOtp from "../pages/auth/ForgotPasswordOtp";
+import ResetPassword from '../pages/auth/ResetPassword';
 
 // We’ll add protected routes and dashboards later
 const AppRoutes = () => {
@@ -11,6 +14,9 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/otp-verify" element={<OtpVerify />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/verify-forgot-otp" element={<ForgotPasswordOtp />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* sample placeholders for later */}
       <Route path="/admin" element={<div>Admin Dashboard</div>} />

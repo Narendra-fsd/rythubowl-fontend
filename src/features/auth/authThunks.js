@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { loginApi, registerApi, otpVerifyApi } from "../../api/authApi";
+import { loginApi, registerApi, otpVerifyApi, forgotPasswordApi, verifyForgotPasswordOtpApi, resetPasswordApi } from "../../api/authApi";
 import { setToken, setUser } from "../../utils/tokenUtils";
 
 // 🔹 LOGIN
@@ -63,4 +63,37 @@ export const verifyOtp = createAsyncThunk(
     }
   }
 );
+
+// 🔹 Forgot Password
+export const forgotPassword = createAsyncThunk("auth/forgotPassword", async (formData, { rejectWithValue }) => {
+  try {
+    const res = await forgotPasswordApi(formData);
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response?.data?.message || "Failed to send reset OTP");
+  }
+});
+
+// 🔹 Verify Forgot Password OTP
+export const verifyForgotPasswordOtp = createAsyncThunk(
+  "auth/verifyForgotPasswordOtp",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await verifyForgotPasswordOtpApi(formData);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "OTP verification failed");
+    }
+  }
+);
+
+// 🔹 Reset Password
+export const resetPassword = createAsyncThunk("auth/resetPassword", async (formData, { rejectWithValue }) => {
+  try {
+    const res = await resetPasswordApi(formData);
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response?.data?.message || "Failed to reset password");
+  }
+});
 

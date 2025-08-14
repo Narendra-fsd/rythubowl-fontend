@@ -10,4 +10,8 @@ export const otpVerifyApi = (data) =>
     validateStatus: (status) => status < 500
   });
 export const forgotPasswordApi = (data) => axiosInstance.post('/auth/forgot-password', data);
+
+export const verifyForgotPasswordOtpApi = (data) =>
+  axiosInstance.post("/auth/verify-forgot-otp", data);
+
 export const resetPasswordApi = (data) => axiosInstance.post('/auth/reset-password', data);
