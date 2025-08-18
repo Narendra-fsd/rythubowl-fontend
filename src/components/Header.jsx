@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Menu } from 'lucide-react';
+import { User, Menu, UserRoundPlus } from 'lucide-react';
 import { Button } from 'react-bootstrap';
 import Logo from '../assets/rythubowl-logo.png';
 import '../components/Header.css';
@@ -44,6 +44,7 @@ const Header = () => {
               onClick={() => navigate('/register')}
               className="btn header-signup-button"
             >
+              <UserRoundPlus className="button-icon" />
               Sign Up
             </button>
           </div>
