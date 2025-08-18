@@ -17,7 +17,7 @@ const LoginForm = () => {
         // role based redirect
         if (user?.role === "SuperAdmin") navigate("/admin");
         else if (user?.role === "DeliveryAgent") navigate("/delivery");
-        else navigate("/dashboard");
+        else navigate("/");
       })
       .catch((error) => {
         // Handle unverified email case
