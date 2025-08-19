@@ -1,17 +1,38 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { ShoppingCart, Trash, Plus, Minus, Search } from 'lucide-react';
+import { ShoppingCart, Trash, Plus, Minus, Search, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import './productManagement.css'; // Keep your CSS file
+import './productManagement.css';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { setProductsCart } from '../../Redux/productSlice';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const ProductManagement = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const productsCart = useSelector((state) => state.product.productsCart);
   const [products, setProducts] = useState([]);
-  const [productCart, setProductCart] = useState([]);
+  const [productCart, setProductCart] = useState(productsCart);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All'); // 🔹 New
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showCart, setShowCart] = useState(false);
+
+  // Load cart from localStorage on component mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem('organicStoreCart');
+    if (savedCart) {
+      setProductCart(JSON.parse(savedCart));
+    }
+
+    fetchProducts();
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('organicStoreCart', JSON.stringify(productCart));
+  }, [productCart]);
 
   const fetchProducts = async () => {
     try {
@@ -22,11 +43,6 @@ const ProductManagement = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  // 🔹 Get unique categories from products
   const categories = ['All', ...new Set(products.map((p) => p.category))];
 
   const filteredProducts = products.filter((product) => {
@@ -54,6 +70,7 @@ const ProductManagement = () => {
         return [...prevCart, { ...product, quantity: 1 }];
       }
     });
+    setShowCart(true);
   };
 
   const incrementCartItem = (id) => {
@@ -79,6 +96,7 @@ const ProductManagement = () => {
   };
 
   const handleCheckout = () => {
+    dispatch(setProductsCart(productCart));
     navigate('/checkout', { state: { cart: productCart } });
   };
 
@@ -126,32 +144,31 @@ const ProductManagement = () => {
     );
   };
 
-  // ---------------- RENDER ----------------
   return (
     <>
       <Header />
 
       <div className="product-management-container">
-        <div className="content-wrapper">
-          {/* 🔹 Sidebar for Categories */}
-          <div className="sidebar">
-            <h2 className="sidebar-title">Categories</h2>
-            <ul className="category-list">
-              {categories.map((cat) => (
-                <li
-                  key={cat}
-                  className={`category-item ${
-                    selectedCategory === cat ? 'active' : ''
-                  }`}
-                  onClick={() => setSelectedCategory(cat)}
-                >
-                  {cat}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Fixed Sidebar */}
+        <div className="sidebar">
+          <h2 className="sidebar-title">Categories</h2>
+          <ul className="category-list">
+            {categories.map((cat) => (
+              <li
+                key={cat}
+                className={`category-item ${
+                  selectedCategory === cat ? 'active' : ''
+                }`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          {/* 🔹 Main Content */}
+        {/* Main Content */}
+        <div className="main-content-wrapper">
           <div className="main-content">
             {/* Header */}
             <div className="header-container">
@@ -172,17 +189,18 @@ const ProductManagement = () => {
 
                 <button
                   className="view-cart-button"
-                  onClick={() =>
-                    document
-                      .getElementById('cart-section')
-                      ?.scrollIntoView({ behavior: 'smooth' })
-                  }
+                  onClick={() => setShowCart(!showCart)}
                 >
                   <ShoppingCart className="cart-icon" />
                   <span>View Cart</span>
-                  <span className="cart-count">
-                    {productCart.reduce((acc, item) => acc + item.quantity, 0)}
-                  </span>
+                  {productCart.length > 0 && (
+                    <span className="cart-count">
+                      {productCart.reduce(
+                        (acc, item) => acc + item.quantity,
+                        0
+                      )}
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
@@ -212,90 +230,90 @@ const ProductManagement = () => {
                 </div>
               ))}
             </div>
+          </div>
 
-            {/* Cart Section */}
-            <div id="cart-section" className="cart-section">
-              {productCart.length > 0 ? (
-                <div className="cart-container">
-                  <h2 className="cart-title">Your Shopping Cart</h2>
+          {/* Cart Sidebar */}
+          <div className={`cart-sidebar ${showCart ? 'open' : ''}`}>
+            <div className="cart-header">
+              <h2>Your Cart</h2>
+              <button onClick={() => setShowCart(false)} className="close-cart">
+                <X size={20} />
+              </button>
+            </div>
 
-                  <div className="cart-items-container">
-                    {productCart.map((item) => (
-                      <div key={item._id} className="cart-item">
-                        <div className="cart-item-info">
-                          <img
-                            src={`https://source.unsplash.com/100x100/?${item.category},organic,${item.name}`}
-                            alt={item.name}
-                            className="cart-item-image"
-                          />
-                          <div>
-                            <h3 className="cart-item-name">{item.name}</h3>
-                            <p className="cart-item-price">
-                              ₹{item.price} each
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="cart-item-controls">
-                          <div className="cart-quantity-control">
-                            <button
-                              onClick={() => decrementCartItem(item._id)}
-                              className="cart-quantity-button minus-button"
-                            >
-                              <Minus size={14} />
-                            </button>
-                            <span className="cart-quantity-display">
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() => incrementCartItem(item._id)}
-                              className="cart-quantity-button plus-button"
-                            >
-                              <Plus size={14} />
-                            </button>
-                          </div>
-
-                          <span className="cart-item-total">
-                            ₹{(item.price * item.quantity).toFixed(2)}
-                          </span>
-
-                          <button
-                            onClick={() => removeCartItem(item._id)}
-                            className="remove-item-button"
-                          >
-                            <Trash className="trash-icon" />
-                          </button>
+            {productCart.length > 0 ? (
+              <>
+                <div className="cart-items-container">
+                  {productCart.map((item) => (
+                    <div key={item._id} className="cart-item">
+                      <div className="cart-item-info">
+                        <img
+                          src={`https://source.unsplash.com/100x100/?${item.category},organic,${item.name}`}
+                          alt={item.name}
+                          className="cart-item-image"
+                        />
+                        <div className="cart-item-details">
+                          <h3 className="cart-item-name">{item.name}</h3>
+                          <p className="cart-item-price">₹{item.price} each</p>
                         </div>
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="cart-summary">
-                    <div className="total-container">
-                      <span className="total-label">Total:</span>
-                      <span className="total-amount">₹{calculateTotal()}</span>
+                      <div className="cart-item-controls">
+                        <div className="cart-quantity-control">
+                          <button
+                            onClick={() => decrementCartItem(item._id)}
+                            className="cart-quantity-button minus-button"
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <span className="cart-quantity-display">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => incrementCartItem(item._id)}
+                            className="cart-quantity-button plus-button"
+                          >
+                            <Plus size={14} />
+                          </button>
+                        </div>
+
+                        <span className="cart-item-total">
+                          ₹{(item.price * item.quantity).toFixed(2)}
+                        </span>
+
+                        <button
+                          onClick={() => removeCartItem(item._id)}
+                          className="remove-item-button"
+                        >
+                          <Trash className="trash-icon" size={14} />
+                        </button>
+                      </div>
                     </div>
+                  ))}
+                </div>
 
-                    <button
-                      onClick={handleCheckout}
-                      className="checkout-button"
-                    >
-                      Proceed to Checkout
-                    </button>
+                <div className="cart-summary">
+                  <div className="total-container">
+                    <span className="total-label">Total:</span>
+                    <span className="total-amount">₹{calculateTotal()}</span>
                   </div>
+
+                  <button onClick={handleCheckout} className="checkout-button">
+                    Proceed to Checkout
+                  </button>
                 </div>
-              ) : (
-                <div className="empty-cart">
-                  <div className="empty-cart-icon">
-                    <ShoppingCart className="cart-icon-large" />
-                  </div>
-                  <p className="empty-cart-message">Your cart is empty</p>
-                  <p className="empty-cart-submessage">
-                    Add some fresh products to get started!
-                  </p>
+              </>
+            ) : (
+              <div className="empty-cart">
+                <div className="empty-cart-icon">
+                  <ShoppingCart className="cart-icon-large" size={48} />
                 </div>
-              )}
-            </div>
+                <p className="empty-cart-message">Your cart is empty</p>
+                <p className="empty-cart-submessage">
+                  Add some fresh products to get started!
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

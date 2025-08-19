@@ -24,49 +24,49 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="header-container">
-        <div className="header-content">
+      <div className="header__container">
+        <div className="header__content">
           {/* Logo */}
-          <div className="logo-container" onClick={() => navigate('/')}>
-            <img src={Logo} alt="Logo" className="logo" />
+          <div className="header__logo-container" onClick={() => navigate('/')}>
+            <img src={Logo} alt="Logo" className="header__logo" />
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="desktop-nav">
-            <button onClick={() => navigate('/')} className="nav-button">
+          <nav className="header__desktop-nav">
+            <button onClick={() => navigate('/')} className="header__nav-button">
               Home
             </button>
-            <button onClick={() => navigate('/about')} className="nav-button">
+            <button onClick={() => navigate('/about')} className="header__nav-button">
               About
             </button>
-            <button onClick={() => navigate('/product')} className="nav-button">
+            <button onClick={() => navigate('/product')} className="header__nav-button">
               Products
             </button>
           </nav>
 
           {/* Auth Buttons (only if NOT logged in) */}
           {!isAuthenticated ? (
-            <div className="auth-buttons">
+            <div className="header__auth-buttons">
               <button
                 onClick={() => navigate('/login')}
-                className="btn header-signup-button"
+                className="btn header__signup-button"
               >
-                <User className="button-icon" />
+                <User className="header__button-icon" />
                 Login
               </button>
               <button
                 onClick={() => navigate('/register')}
-                className="btn header-signup-button"
+                className="btn header__signup-button"
               >
-                <UserRoundPlus className="button-icon" />
+                <UserRoundPlus className="header__button-icon" />
                 Sign Up
               </button>
             </div>
           ) : (
-            <div className="auth-buttons">
+            <div className="header__auth-buttons">
               <button
                 onClick={handleLogout}
-                className="btn header-signup-button"
+                className="btn header__signup-button"
               >
                 Logout
               </button>
@@ -75,23 +75,23 @@ const Header = () => {
 
           {/* Mobile menu button */}
           <button
-            className="mobile-menu-button"
+            className="header__mobile-menu-button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <Menu className="icon" />
+            <Menu className="header__icon" />
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="mobile-nav">
-            <div className="mobile-nav-content">
+          <div className="header__mobile-nav">
+            <div className="header__mobile-nav-content">
               <button
                 onClick={() => {
                   navigate('/');
                   setIsMenuOpen(false);
                 }}
-                className="mobile-nav-button"
+                className="header__mobile-nav-button"
               >
                 Home
               </button>
@@ -100,28 +100,28 @@ const Header = () => {
                   navigate('/about');
                   setIsMenuOpen(false);
                 }}
-                className="mobile-nav-button"
+                className="header__mobile-nav-button"
               >
                 About
               </button>
               <button
                 onClick={() => {
-                  navigate('/poduct');
+                  navigate('/product');
                   setIsMenuOpen(false);
                 }}
-                className="mobile-nav-button"
+                className="header__mobile-nav-button"
               >
                 Products
               </button>
 
               {!isAuthenticated ? (
-                <div className="mobile-auth-buttons">
+                <div className="header__mobile-auth-buttons">
                   <Button
                     onClick={() => {
                       navigate('/login');
                       setIsMenuOpen(false);
                     }}
-                    className="btn header-mobile-login-button"
+                    className="btn header__mobile-login-button"
                   >
                     Login
                   </Button>
@@ -130,19 +130,19 @@ const Header = () => {
                       navigate('/register');
                       setIsMenuOpen(false);
                     }}
-                    className="btn header-mobile-signup-button"
+                    className="btn header__mobile-signup-button"
                   >
                     Sign Up
                   </Button>
                 </div>
               ) : (
-                <div className="mobile-auth-buttons">
+                <div className="header__mobile-auth-buttons">
                   <Button
                     onClick={() => {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="btn header-mobile-login-button"
+                    className="btn header__mobile-login-button"
                   >
                     Logout
                   </Button>
