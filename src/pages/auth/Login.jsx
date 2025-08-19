@@ -1,10 +1,10 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Form, Input, Button, Card, Alert, Checkbox } from "antd";
-import { loginUser } from "../../features/auth/authThunks";
-import { useNavigate } from "react-router-dom";
-import Bgimg from "../../assets/bg-img.png";
-
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Form, Input, Button, Card, Alert, Checkbox } from 'antd';
+import { loginUser } from '../../features/auth/authThunks';
+import { useNavigate } from 'react-router-dom';
+import Bgimg from '../../assets/bg-img.png';
+import './Login.css'; // Import the CSS file
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -17,14 +17,14 @@ const Login = () => {
       .unwrap()
       .then(({ user }) => {
         // role based redirect
-        if (user?.role === "SuperAdmin") navigate("/admin");
-        else if (user?.role === "DeliveryAgent") navigate("/delivery");
-        else navigate("/");
+        if (user?.role === 'SuperAdmin') navigate('/admin');
+        else if (user?.role === 'DeliveryAgent') navigate('/delivery');
+        else navigate('/');
       })
       .catch((error) => {
         // Handle unverified email case
         if (error.isVerified === false) {
-          navigate("/otp-verify", {
+          navigate('/otp-verify', {
             state: {
               email: error.email || values.email,
               error: error.message,
@@ -35,15 +35,13 @@ const Login = () => {
   };
 
   return (
-    <div
-      className="min-h-screen w-full flex items-center justify-start p-4 bg-cover bg-center"
-      style={{ backgroundImage: `url(${Bgimg})` }}
-    >
-      <Card className="w-full max-w-md shadow-lg bg-white/90 backdrop-blur-md">
-        <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
+    <div className="login-container">
+      <Card className="login-card">
+        <h2 className="login-title">Welcome Back</h2>
+        <p className="login-subtitle">Sign in to your account</p>
 
         {error && error.isVerified !== false && (
-          <Alert type="error" message={error.message} className="mb-3" />
+          <Alert type="error" message={error.message} className="error-alert" />
         )}
 
         <Form layout="vertical" form={form} onFinish={onFinish}>
@@ -51,26 +49,30 @@ const Login = () => {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: "Please enter your email" },
-              { type: "email", message: "Invalid email" },
+              { required: true, message: 'Please enter your email' },
+              { type: 'email', message: 'Invalid email' },
             ]}
           >
-            <Input placeholder="you@example.com" />
+            <Input placeholder="you@example.com" className="login-input" />
           </Form.Item>
 
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: "Please enter your password" }]}
+            rules={[{ required: true, message: 'Please enter your password' }]}
           >
-            <Input.Password placeholder="••••••••" />
+            <Input.Password placeholder="••••••••" className="login-input" />
           </Form.Item>
 
-          <div className="flex items-center justify-between mb-3">
+          <div className="login-options">
             <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox className="remember-checkbox">Remember me</Checkbox>
             </Form.Item>
-            <Button type="link" onClick={() => navigate("/forgot-password")}>
+            <Button
+              type="link"
+              className="forgot-password-link"
+              onClick={() => navigate('/forgot-password')}
+            >
               Forgot password?
             </Button>
           </div>
@@ -78,19 +80,21 @@ const Login = () => {
           <Button
             type="primary"
             htmlType="submit"
-            className="w-full"
+            className="login-button"
             loading={loading}
           >
             Sign in
           </Button>
 
-          <div className="text-center mt-3">
-            <span className="text-sm">
-              New here?{" "}
-              <Button type="link" onClick={() => navigate("/register")}>
-                Create an account
-              </Button>
-            </span>
+          <div className="register-cta">
+            <span className="register-text">New here?</span>
+            <Button
+              type="link"
+              className="register-link"
+              onClick={() => navigate('/register')}
+            >
+              Create an account
+            </Button>
           </div>
         </Form>
       </Card>

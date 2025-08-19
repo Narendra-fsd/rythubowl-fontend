@@ -1,9 +1,12 @@
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { resetPassword } from "../../features/auth/authThunks";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetPassword } from '../../features/auth/authThunks';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Card, Button, Alert } from 'antd';
+import Bgimg from '../../assets/bg-img.png';
+import './ResetPassword.css';
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
@@ -15,22 +18,22 @@ const ResetPassword = () => {
   const otp = location.state?.otp;
 
   if (!email || !otp) {
-    navigate("/forgot-password"); // If direct access, redirect back
-    return null; // Return early to prevent rendering
+    navigate('/forgot-password');
+    return null;
   }
 
   const initialValues = {
-    password: "",
-    confirmPassword: "",
+    password: '',
+    confirmPassword: '',
   };
 
   const validationSchema = Yup.object({
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Required"),
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .required("Required"),
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Please confirm your password'),
   });
 
   const handleSubmit = (values) => {
@@ -43,78 +46,90 @@ const ResetPassword = () => {
     )
       .unwrap()
       .then(() => {
-        navigate("/login", {
-          state: { 
+        navigate('/login', {
+          state: {
             success: true,
-            message: "Password reset successfully!" 
-          }
+            message: 'Password reset successfully!',
+          },
         });
       });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="max-w-md w-full bg-white p-6 rounded shadow">
-        <h2 className="text-2xl font-bold mb-4">Reset Password</h2>
-        
+    <div className="reset-password-container">
+      <Card className="reset-password-card">
+        <h2 className="reset-password-title">Create New Password</h2>
+        <p className="reset-password-subtitle">
+          Enter a new password for your account
+        </p>
+
+        {error && (
+          <Alert
+            message={error}
+            type="error"
+            className="error-alert"
+            showIcon
+          />
+        )}
+
+        {successMessage && (
+          <Alert
+            message={successMessage}
+            type="success"
+            className="success-alert"
+            showIcon
+          />
+        )}
+
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          <Form className="space-y-4">
-            <div>
-              <label className="block">New Password</label>
-              <Field
-                name="password"
-                type="password"
-                className="w-full border p-2 rounded"
-                placeholder="Enter new password"
-              />
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-            
-            <div>
-              <label className="block">Confirm Password</label>
-              <Field
-                name="confirmPassword"
-                type="password"
-                className="w-full border p-2 rounded"
-                placeholder="Confirm new password"
-              />
-              <ErrorMessage
-                name="confirmPassword"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-            
-            {error && (
-              <div className="p-2 bg-red-100 text-red-700 rounded">
-                {error}
+          {({ errors, touched }) => (
+            <Form className="reset-password-form">
+              <div className="form-group">
+                <label className="form-label">New Password</label>
+                <Field
+                  name="password"
+                  type="password"
+                  className={`form-input ${errors.password && touched.password ? 'error' : ''}`}
+                  placeholder="Enter new password"
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="error-text"
+                />
               </div>
-            )}
-            
-            {successMessage && (
-              <div className="p-2 bg-green-100 text-green-700 rounded">
-                {successMessage}
+
+              <div className="form-group">
+                <label className="form-label">Confirm Password</label>
+                <Field
+                  name="confirmPassword"
+                  type="password"
+                  className={`form-input ${errors.confirmPassword && touched.confirmPassword ? 'error' : ''}`}
+                  placeholder="Confirm new password"
+                />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  className="error-text"
+                />
               </div>
-            )}
-            
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition-colors"
-            >
-              {loading ? "Resetting..." : "Reset Password"}
-            </button>
-          </Form>
+
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="reset-button"
+                loading={loading}
+              >
+                {loading ? 'Resetting...' : 'Reset Password'}
+              </Button>
+            </Form>
+          )}
         </Formik>
-      </div>
+      </Card>
     </div>
   );
 };
