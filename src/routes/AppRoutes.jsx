@@ -11,6 +11,7 @@ import About from '../components/About';
 import ProductManagement from '../pages/products/ProductManagement';
 import ProductList from '../pages/products/ProductList';
 import CheckoutPage from '../pages/checkoutPage/CheckoutPage';
+import Payment from '../pages/payment/Payment';
 // We’ll add protected routes and dashboards later
 const AppRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/otp-verify" element={<OtpVerify />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/payment" element={<Payment />} />
       <Route path="/verify-forgot-otp" element={<ForgotPasswordOtp />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/product" element={<ProductManagement />} />

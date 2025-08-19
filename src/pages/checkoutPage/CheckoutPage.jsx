@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ChevronLeft, CreditCard, Truck } from 'lucide-react';
 import './CheckoutPage.css';
 import Header from '../../components/Header';
@@ -8,7 +8,9 @@ import Footer from '../../components/Footer';
 
 const CheckoutPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { cart } = location.state || { cart: [] };
+  // const [amount, setAmount] = useState();
   const [deliveryOption, setDeliveryOption] = useState('standard');
   const [paymentMethod, setPaymentMethod] = useState('credit');
 
@@ -21,7 +23,14 @@ const CheckoutPage = () => {
   const calculateTotal = () => {
     const subtotal = parseFloat(calculateSubtotal());
     const deliveryFee = deliveryOption === 'express' ? 5.99 : 2.99;
+    // setAmount(subtotal + deliveryFee.toFixed(2));
     return (subtotal + deliveryFee).toFixed(2);
+  };
+
+  const handlePayment = () => {
+    console.log('Payment initiated');
+    const amount = calculateTotal();
+    navigate('/payment', { state: { amount } });
   };
 
   return (
@@ -191,6 +200,12 @@ const CheckoutPage = () => {
               {/* Place Order Button */}
               <button className="place-order-button">
                 Place Order - ₹{calculateTotal()}
+              </button>
+              <button
+                className="place-order-button"
+                onClick={() => handlePayment()}
+              >
+                proced to payment
               </button>
             </div>
           </div>
