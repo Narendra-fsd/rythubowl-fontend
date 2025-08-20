@@ -1,7 +1,6 @@
 /* PaymentFailed.css - Reduced Size */
 html,
 body {
-  overflow: hidden !important;
   height: 100%;
 }
 .failed-bg {
@@ -12,7 +11,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  overflow: hidden !important;
+  /* overflow: hidden !important; */
 }
 
 .failed-card {
@@ -24,10 +23,9 @@ body {
   width: 100%;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
   animation: shake 0.6s ease-out;
   max-height: 90vh;
-  overflow: hidden;
 }
 
 @keyframes shake {
@@ -215,12 +213,12 @@ body {
   .failed-bg {
     padding: 12px;
     height: 100vh;
-    overflow: hidden !important;
+    /* overflow: hidden !important; */
   }
   .failed-card {
     padding: 20px;
     max-height: 95vh;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 
   .payment-title {

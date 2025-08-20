@@ -24,6 +24,10 @@ const AddressPage = () => {
     email: '',
   });
 
+  const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+
+  console.log('User Details:', userDetails);
+
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -109,10 +113,9 @@ const AddressPage = () => {
 
     setShowModal(false);
   };
-  const id = '68a380f5270a5ea901f9f3ef';
 
   const getAddressById = async () => {
-    const id = '68a380f5270a5ea901f9f3ef';
+    const id = userDetails.id;
     try {
       const response = await axios.get(
         `http://localhost:5000/api/addresses/${id}`
@@ -131,7 +134,7 @@ const AddressPage = () => {
   const addAddress = async (address) => {
     const payload = {
       ...address,
-      userId: '68a380f5270a5ea901f9f3ef',
+      userId: userDetails.id,
     };
     try {
       const response = await axios.post(
@@ -152,10 +155,10 @@ const AddressPage = () => {
 
   useEffect(() => {
     const fetchAddress = async () => {
-      await getAddressById(id);
+      await getAddressById(userDetails.id);
     };
     fetchAddress();
-  }, [id]);
+  }, [userDetails.id]);
 
   const handleAddressSelect = (address) => {
     setSelectedAddressId(address);
@@ -180,7 +183,14 @@ const AddressPage = () => {
       alert('Please select a delivery address.');
       return;
     }
-    navigate('/payment', { state: { amount } });
+    navigate('/payment', {
+      state: {
+        amount,
+        OrderItems: cart,
+        selectedAddress: selectedAddressId,
+        customerDetails,
+      },
+    });
   };
   console.log('fetched address', addresses);
   console.log('selected address id', selectedAddressId);

@@ -1,0 +1,372 @@
+/* OrderTracking.css */
+:root {
+  --deep-green: #3a5a40;
+  --medium-green: #588157;
+  --light-green: #a3b18a;
+  --cream-bg: #f8f9fa;
+  --light-beige: #dad7cd;
+  --text-dark: #2c2c2c;
+  --text-gray: #6b7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--cream-bg);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.order-tracking-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.order-tracking-container.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.order-tracking-container.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.order-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: slideDown 0.6s ease;
+}
+
+.order-title {
+  font-size: 2.5rem;
+  color: var(--deep-green);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.order-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-gray);
+}
+
+.order-summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  animation: slideUp 0.6s ease 0.2s both;
+}
+
+.order-id-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--light-beige);
+}
+
+.order-id-section h2 {
+  font-size: 1.5rem;
+  color: var(--text-dark);
+}
+
+.highlight {
+  color: var(--deep-green);
+  font-weight: 700;
+}
+
+.status-badge {
+  background-color: var(--light-green);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.payment-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+  margin-bottom: 0.25rem;
+}
+
+.detail-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--deep-green);
+}
+
+.order-items-section {
+  margin-bottom: 2.5rem;
+  animation: slideUp 0.6s ease 0.4s both;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  color: var(--deep-green);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--light-beige);
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.order-item-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 0.6s ease both;
+}
+
+.order-item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.item-image-container {
+  height: 200px;
+  overflow: hidden;
+}
+
+.item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.order-item-card:hover .item-image {
+  transform: scale(1.05);
+}
+
+.item-details {
+  padding: 1.2rem;
+}
+
+.item-name {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-price {
+  font-weight: 700;
+  color: var(--medium-green);
+  font-size: 1.1rem;
+}
+
+.item-quantity {
+  color: var(--text-gray);
+  font-size: 0.9rem;
+}
+
+.progress-container {
+  margin-bottom: 2.5rem;
+  animation: slideUp 0.6s ease 0.6s both;
+}
+
+.progress-tracker {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.progress-tracker::before {
+  content: '';
+  position: absolute;
+  left: 2.1rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--light-beige);
+  z-index: 1;
+}
+
+.progress-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid var(--light-beige);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.2rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.step-number {
+  color: var(--text-gray);
+  font-weight: 600;
+}
+
+.completed .step-icon {
+  background-color: var(--medium-green);
+  border-color: var(--medium-green);
+}
+
+.completed .checkmark {
+  color: white;
+  font-weight: bold;
+}
+
+.active .step-icon {
+  background-color: var(--deep-green);
+  border-color: var(--deep-green);
+}
+
+.active .step-number {
+  color: white;
+}
+
+.step-info {
+  padding-top: 0.3rem;
+}
+
+.step-title {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.2rem;
+}
+
+.step-description {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+}
+
+.back-home-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 1rem 2.5rem;
+  background-color: var(--deep-green);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(58, 90, 64, 0.3);
+  animation: fadeIn 0.6s ease 0.8s both;
+}
+
+.back-home-btn:hover {
+  background-color: var(--medium-green);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(58, 90, 64, 0.4);
+}
+
+.back-home-btn:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .order-tracking-container {
+    padding: 1.5rem;
+  }
+  
+  .order-title {
+    font-size: 2rem;
+  }
+  
+  .order-id-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .payment-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .items-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .progress-tracker {
+    padding-left: 1.5rem;
+  }
+  
+  .progress-tracker::before {
+    left: 1.6rem;
+  }
+}

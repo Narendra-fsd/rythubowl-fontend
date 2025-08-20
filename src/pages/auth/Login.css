@@ -91,15 +91,6 @@
   border-color: var(--primary-green);
 }
 
-.forgot-password-link {
-  color: var(--accent-brown);
-  padding: 0;
-}
-
-.forgot-password-link:hover {
-  color: var(--gold-accent);
-}
-
 /* Error Alert */
 .error-alert {
   margin-bottom: 20px;

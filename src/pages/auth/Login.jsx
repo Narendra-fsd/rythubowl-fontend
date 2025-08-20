@@ -2,35 +2,46 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, Card, Alert, Checkbox } from 'antd';
 import { loginUser } from '../../features/auth/authThunks';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Bgimg from '../../assets/bg-img.png';
-import './Login.css'; // Import the CSS file
+import './Login.css';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { loading, error } = useSelector((s) => s.auth);
   const [form] = Form.useForm();
+
+  // Check for success message from registration/verification
+  const successMessage = location.state?.message;
 
   const onFinish = (values) => {
     dispatch(loginUser({ email: values.email, password: values.password }))
       .unwrap()
-      .then(({ user }) => {
+      .then(({ user, token }) => {
         // role based redirect
         if (user?.role === 'SuperAdmin') navigate('/admin');
         else if (user?.role === 'DeliveryAgent') navigate('/delivery');
-        else navigate('/');
+        else {
+          localStorage.setItem('isAuthenticated', true);
+          localStorage.setItem('token', token);
+          localStorage.setItem('userDetails', JSON.stringify(user));
+
+          navigate('/');
+        }
       })
       .catch((error) => {
-        // Handle unverified email case
+        // Handle unverified email case - ONLY if specifically indicated
         if (error.isVerified === false) {
-          navigate('/otp-verify', {
+          navigate('/verify-email', {
             state: {
               email: error.email || values.email,
               error: error.message,
             },
           });
         }
+        // For other errors, they will be displayed in the error alert below
       });
   };
 
@@ -40,6 +51,16 @@ const Login = () => {
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Sign in to your account</p>
 
+        {/* Show success message if coming from registration/verification */}
+        {successMessage && (
+          <Alert
+            type="success"
+            message={successMessage}
+            className="success-alert"
+          />
+        )}
+
+        {/* Show error only if it's NOT an unverified email error */}
         {error && error.isVerified !== false && (
           <Alert type="error" message={error.message} className="error-alert" />
         )}
@@ -63,19 +84,6 @@ const Login = () => {
           >
             <Input.Password placeholder="••••••••" className="login-input" />
           </Form.Item>
-
-          <div className="login-options">
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox className="remember-checkbox">Remember me</Checkbox>
-            </Form.Item>
-            <Button
-              type="link"
-              className="forgot-password-link"
-              onClick={() => navigate('/forgot-password')}
-            >
-              Forgot password?
-            </Button>
-          </div>
 
           <Button
             type="primary"

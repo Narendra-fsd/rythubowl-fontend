@@ -3,16 +3,28 @@ import React from 'react';
 import { CheckCircle, ArrowRight, ShoppingBag, Home } from 'lucide-react';
 import './PaymentSuccess.css';
 import Header from '../../components/Header';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PaymentSuccess = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const orderDetails = location.state?.orderDetails || {};
+  const orderId = location.state?.orderId || '';
+  const amount = location.state?.amount || '';
+  const paymentId = location.state?.paymentId || '';
+
   const handleViewOrders = () => {
     // Navigate to orders page
-    console.log('Navigate to orders page');
+    navigate('/order-tracking', {
+      state: { orderDetails, orderId, amount, paymentId },
+    });
   };
 
   const handleBackToHome = () => {
     // Navigate to home page
-    console.log('Navigate to home page');
+
+    navigate('/');
   };
 
   return (
@@ -41,19 +53,15 @@ const PaymentSuccess = () => {
           <div className="order-details">
             <div className="detail-row">
               <span className="detail-label">Order ID:</span>
-              <span className="detail-value">#ORD-2023-78945</span>
+              <span className="detail-value">{orderId}</span>
             </div>
             <div className="detail-row">
               <span className="detail-label">Amount Paid:</span>
-              <span className="detail-value">$149.99</span>
+              <span className="detail-value">{amount}</span>
             </div>
             <div className="detail-row">
-              <span className="detail-label">Payment Method:</span>
-              <span className="detail-value">Credit Card</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Estimated Delivery:</span>
-              <span className="detail-value">July 15, 2023</span>
+              <span className="detail-label">paymentId:</span>
+              <span className="detail-value">{paymentId}</span>
             </div>
           </div>
 

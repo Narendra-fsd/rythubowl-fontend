@@ -5,13 +5,3 @@ export const registerApi = (data) =>
   axiosInstance.post('/auth/register', data, {
     validateStatus: (status) => status < 500 // Reject only server errors
   });
-export const otpVerifyApi = (data) => 
-  axiosInstance.post('/auth/verify-email', data, {
-    validateStatus: (status) => status < 500
-  });
-export const forgotPasswordApi = (data) => axiosInstance.post('/auth/forgot-password', data);
-
-export const verifyForgotPasswordOtpApi = (data) =>
-  axiosInstance.post("/auth/verify-forgot-otp", data);
-
-export const resetPasswordApi = (data) => axiosInstance.post('/auth/reset-password', data);

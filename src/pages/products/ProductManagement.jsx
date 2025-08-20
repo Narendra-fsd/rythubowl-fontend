@@ -212,7 +212,10 @@ const ProductManagement = () => {
                   <div className="product-image-container">
                     <img
                       alt={product.name}
-                      src={`https://source.unsplash.com/400x300/?${product.category},organic,${product.name}`}
+                      src={
+                        product.imageUrl ||
+                        `https://source.unsplash.com/200x200/?${product.category},${product.name}`
+                      }
                       className="product-image"
                     />
                     <div className="category-badge">
@@ -248,7 +251,7 @@ const ProductManagement = () => {
                     <div key={item._id} className="cart-item">
                       <div className="cart-item-info">
                         <img
-                          src={`https://source.unsplash.com/100x100/?${item.category},organic,${item.name}`}
+                          src={item.imageUrl}
                           alt={item.name}
                           className="cart-item-image"
                         />
@@ -257,7 +260,6 @@ const ProductManagement = () => {
                           <p className="cart-item-price">₹{item.price} each</p>
                         </div>
                       </div>
-
                       <div className="cart-item-controls">
                         <div className="cart-quantity-control">
                           <button

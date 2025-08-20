@@ -1,35 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Payment = () => {
+  const navigate = useNavigate();
   const location = useLocation();
+  const userDetails = JSON.parse(localStorage.getItem('userDetails')) || {};
 
   const amount = location.state?.amount || '';
+  const OrderItems = location.state?.OrderItems || [];
+  const selectedAddress = location.state?.selectedAddress || '';
+  const customerDetails = location.state?.customerDetails || '';
 
   const [orderDetails, setOrderDetails] = useState({
-    userId: '68a2f196482bfbd5570b5b0d', // Example user ID, replace with actual user ID logic
-    customerDetails: {
-      name: 'John Doe',
-      email: 'johon@gamil.com',
-      contact: '9999999999',
-    },
-    OrderItems: [
-      {
-        itemName: 'Sample Item',
-        itemPrice: 100,
-        itemQuantity: 1,
-        itemTotal: 100,
-      },
-      {
-        itemName: 'Sample Item 2',
-        itemPrice: 200,
-        itemQuantity: 1,
-        itemTotal: 200,
-      },
-    ],
+    userId: userDetails.id, // Example user ID, replace with actual user ID logic
+    customerDetails: customerDetails,
+    OrderItems: OrderItems, // Example order items, replace with actual order items logic],
     // Example order items, replace with actual order items logic
   });
+  console.log('Order Details:', orderDetails);
   const [razorpayKey, setRazorpayKey] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -108,14 +97,25 @@ const Payment = () => {
             );
 
             if (verifyResponse.data.success) {
-              alert('Payment Successful!');
+              console.log('Payment successful:', verifyResponse.data.data);
+              alert(`Payment Successful!${verifyResponse.data.data}`);
+              navigate('/payment-success', {
+                state: {
+                  orderDetails: verifyResponse.data.data.orderDetails,
+                  amount: verifyResponse.data.data.amount,
+                  orderId: verifyResponse.data.data.orderId,
+                  paymentId: verifyResponse.data.data.paymentId,
+                },
+              });
               // Handle successful payment (update database, etc.)
             } else {
               alert('Payment verification failed');
+              navigate('/payment-failure');
             }
           } catch (error) {
             console.error('Error verifying payment:', error);
             alert('Payment verification error');
+            navigate('/payment-failure');
           }
         },
         prefill: {

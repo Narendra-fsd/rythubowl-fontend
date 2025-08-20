@@ -2,17 +2,16 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../features/auth/authThunks';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button } from 'antd';
-import Bgimg from '../../assets/bg-img.png';
+import { Card, Button, Alert } from 'antd';
+import { registerUser } from '../../features/auth/authThunks';
 import './Register.css';
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error } = useSelector((state) => state.auth);
-  const [loadingState, setLoadingState] = useState(false);
+  const { loading, error, successMessage } = useSelector((state) => state.auth);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const initialValues = {
     name: '',
@@ -31,19 +30,22 @@ const Register = () => {
   });
 
   const handleSubmit = (values) => {
-    setLoadingState(true);
     dispatch(registerUser(values))
       .unwrap()
-      .then(() => {
-        navigate('/otp-verify', {
-          state: {
-            email: values.email,
-            message: 'OTP sent to your email',
-          },
-        });
+      .then((response) => {
+        setShowSuccess(true);
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          navigate('/login', {
+            state: {
+              email: values.email,
+              message: 'Registration successful! Please login.',
+            },
+          });
+        }, 1500);
       })
-      .finally(() => {
-        setLoadingState(false);
+      .catch((error) => {
+        console.error('Registration failed:', error);
       });
   };
 
@@ -53,7 +55,25 @@ const Register = () => {
         <h2 className="register-title">Create Account</h2>
         <p className="register-subtitle">Join us today</p>
 
-        {error && <div className="error-message">{error}</div>}
+        {/* Success message */}
+        {showSuccess && successMessage && (
+          <Alert
+            message={successMessage}
+            type="success"
+            className="success-alert"
+            showIcon
+          />
+        )}
+
+        {/* Error message */}
+        {error && (
+          <Alert
+            message={error.message || 'Registration failed'}
+            type="error"
+            className="error-alert"
+            showIcon
+          />
+        )}
 
         <Formik
           initialValues={initialValues}
@@ -67,6 +87,7 @@ const Register = () => {
                 <Field
                   name="name"
                   className={`form-input ${errors.name && touched.name ? 'error' : ''}`}
+                  placeholder="Enter your full name"
                 />
                 <ErrorMessage
                   name="name"
@@ -81,6 +102,7 @@ const Register = () => {
                   name="email"
                   type="email"
                   className={`form-input ${errors.email && touched.email ? 'error' : ''}`}
+                  placeholder="Enter your email"
                 />
                 <ErrorMessage
                   name="email"
@@ -94,6 +116,7 @@ const Register = () => {
                 <Field
                   name="phone"
                   className={`form-input ${errors.phone && touched.phone ? 'error' : ''}`}
+                  placeholder="Enter your phone number"
                 />
                 <ErrorMessage
                   name="phone"
@@ -108,6 +131,7 @@ const Register = () => {
                   name="password"
                   type="password"
                   className={`form-input ${errors.password && touched.password ? 'error' : ''}`}
+                  placeholder="Create a password"
                 />
                 <ErrorMessage
                   name="password"
@@ -120,9 +144,10 @@ const Register = () => {
                 type="primary"
                 htmlType="submit"
                 className="register-button"
-                loading={loadingState}
+                loading={loading}
+                disabled={loading}
               >
-                {loadingState ? 'Registering...' : 'Register'}
+                {loading ? 'Registering...' : 'Register'}
               </Button>
             </Form>
           )}
