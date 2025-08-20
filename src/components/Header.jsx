@@ -7,18 +7,21 @@ import '../components/Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem('isAuthenticated');
+  const token = localStorage.getItem('token');
 
   // Check if user is logged in (e.g., token in localStorage)
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   setIsAuthenticated(!!token);
+  // }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    setIsAuthenticated(false);
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userDetails');
     navigate('/login');
   };
 
@@ -33,13 +36,22 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="header__desktop-nav">
-            <button onClick={() => navigate('/')} className="header__nav-button">
+            <button
+              onClick={() => navigate('/')}
+              className="header__nav-button"
+            >
               Home
             </button>
-            <button onClick={() => navigate('/about')} className="header__nav-button">
+            <button
+              onClick={() => navigate('/about')}
+              className="header__nav-button"
+            >
               About
             </button>
-            <button onClick={() => navigate('/product')} className="header__nav-button">
+            <button
+              onClick={() => navigate('/product')}
+              className="header__nav-button"
+            >
               Products
             </button>
           </nav>

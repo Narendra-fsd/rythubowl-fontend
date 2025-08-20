@@ -12,6 +12,8 @@ import ProductManagement from '../pages/products/ProductManagement';
 import ProductList from '../pages/products/ProductList';
 import CheckoutPage from '../pages/checkoutPage/CheckoutPage';
 import Payment from '../pages/payment/Payment';
+import AddressManagement from '../pages/address/AddressManagement';
+
 // We’ll add protected routes and dashboards later
 const AppRoutes = () => {
   return (
@@ -28,6 +30,7 @@ const AppRoutes = () => {
       <Route path="/product" element={<ProductManagement />} />
       <Route path="/product-list" element={<ProductList />} />
       <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/address" element={<AddressManagement />} />
 
       {/* sample placeholders for later */}
       {/* <Route path="/admin" element={<div>Admin Dashboard</div>} />

@@ -27,10 +27,18 @@ const CheckoutPage = () => {
     return (subtotal + deliveryFee).toFixed(2);
   };
 
-  const handlePayment = () => {
-    console.log('Payment initiated');
+  // const handlePayment = () => {
+  //   console.log('Payment initiated');
+  //   const amount = calculateTotal();
+  //   navigate('/payment', { state: { amount } });
+  // };
+  const handleCheckout = () => {
+    console.log('Checkout initiated');
     const amount = calculateTotal();
-    navigate('/payment', { state: { amount } });
+
+    navigate('/address', {
+      state: { cart, deliveryOption, paymentMethod, amount },
+    });
   };
 
   return (
@@ -198,14 +206,11 @@ const CheckoutPage = () => {
                 </div>
               </div>
               {/* Place Order Button */}
-              <button className="place-order-button">
-                Place Order - ₹{calculateTotal()}
-              </button>
               <button
                 className="place-order-button"
-                onClick={() => handlePayment()}
+                onClick={() => handleCheckout()}
               >
-                proced to payment
+                checkout - ₹{calculateTotal()}
               </button>
             </div>
           </div>
