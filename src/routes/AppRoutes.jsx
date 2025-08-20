@@ -13,6 +13,8 @@ import ProductList from '../pages/products/ProductList';
 import CheckoutPage from '../pages/checkoutPage/CheckoutPage';
 import Payment from '../pages/payment/Payment';
 import AddressManagement from '../pages/address/AddressManagement';
+import PaymentSuccess from '../pages/payment/paymentSuccess';
+import PaymentFailed from '../pages/payment/paymentFailed';
 
 // We’ll add protected routes and dashboards later
 const AppRoutes = () => {
@@ -31,6 +33,9 @@ const AppRoutes = () => {
       <Route path="/product-list" element={<ProductList />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/address" element={<AddressManagement />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/payment-failed" element={<PaymentFailed />} />
+      
 
       {/* sample placeholders for later */}
       {/* <Route path="/admin" element={<div>Admin Dashboard</div>} />
