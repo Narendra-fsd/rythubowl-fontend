@@ -5,6 +5,7 @@ import { loginUser } from '../../features/auth/authThunks';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Bgimg from '../../assets/bg-img.png';
 import './Login.css';
+import Header from '../../components/Header';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -46,67 +47,76 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <Card className="login-card">
-        <h2 className="login-title">Welcome Back</h2>
-        <p className="login-subtitle">Sign in to your account</p>
+    <>
+      <Header />
+      <div className="login-container">
+        <Card className="login-card">
+          <h2 className="login-title">Welcome Back</h2>
+          <p className="login-subtitle">Sign in to your account</p>
 
-        {/* Show success message if coming from registration/verification */}
-        {successMessage && (
-          <Alert
-            type="success"
-            message={successMessage}
-            className="success-alert"
-          />
-        )}
+          {/* Show success message if coming from registration/verification */}
+          {successMessage && (
+            <Alert
+              type="success"
+              message={successMessage}
+              className="success-alert"
+            />
+          )}
 
-        {/* Show error only if it's NOT an unverified email error */}
-        {error && error.isVerified !== false && (
-          <Alert type="error" message={error.message} className="error-alert" />
-        )}
+          {/* Show error only if it's NOT an unverified email error */}
+          {error && error.isVerified !== false && (
+            <Alert
+              type="error"
+              message={error.message}
+              className="error-alert"
+            />
+          )}
 
-        <Form layout="vertical" form={form} onFinish={onFinish}>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: 'Please enter your email' },
-              { type: 'email', message: 'Invalid email' },
-            ]}
-          >
-            <Input placeholder="you@example.com" className="login-input" />
-          </Form.Item>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: 'Please enter your password' }]}
-          >
-            <Input.Password placeholder="••••••••" className="login-input" />
-          </Form.Item>
-
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-button"
-            loading={loading}
-          >
-            Sign in
-          </Button>
-
-          <div className="register-cta">
-            <span className="register-text">New here?</span>
-            <Button
-              type="link"
-              className="register-link"
-              onClick={() => navigate('/register')}
+          <Form layout="vertical" form={form} onFinish={onFinish}>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                { required: true, message: 'Please enter your email' },
+                { type: 'email', message: 'Invalid email' },
+              ]}
             >
-              Create an account
+              <Input placeholder="you@example.com" className="login-input" />
+            </Form.Item>
+
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                { required: true, message: 'Please enter your password' },
+              ]}
+            >
+              <Input.Password placeholder="••••••••" className="login-input" />
+            </Form.Item>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-button"
+              loading={loading}
+            >
+              Sign in
             </Button>
-          </div>
-        </Form>
-      </Card>
-    </div>
+
+            <div className="register-cta">
+              <span className="register-text">New here?</span>
+              <Button
+                type="link"
+                className="register-link"
+                onClick={() => navigate('/register')}
+              >
+                Create an account
+              </Button>
+            </div>
+          </Form>
+        </Card>
+      </div>
+    </>
   );
 };
 

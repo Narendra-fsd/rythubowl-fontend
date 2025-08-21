@@ -3,8 +3,11 @@ import React, { useState, useEffect } from 'react';
 import '../address/AddressManagement.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setProductsCart } from '../../Redux/productSlice';
 
 const AddressPage = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const { cart, deliveryOption, paymentMethod, amount } = location.state || {};
   const navigate = useNavigate();
@@ -183,6 +186,7 @@ const AddressPage = () => {
       alert('Please select a delivery address.');
       return;
     }
+    dispatch(setProductsCart([]));
     navigate('/payment', {
       state: {
         amount,

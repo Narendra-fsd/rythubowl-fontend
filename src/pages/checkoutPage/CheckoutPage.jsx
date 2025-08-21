@@ -4,9 +4,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ChevronLeft, CreditCard, Truck } from 'lucide-react';
 import './CheckoutPage.css';
 import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Footer from '../../components/Footer'; 
+import { useDispatch } from 'react-redux';
+import { setProductsCart } from '../../Redux/productSlice';
 
-const CheckoutPage = () => {
+const CheckoutPage = () => { 
+
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const { cart } = location.state || { cart: [] };
