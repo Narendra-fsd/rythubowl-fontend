@@ -54,6 +54,12 @@ const Header = () => {
             >
               Products
             </button>
+            <button
+              onClick={() => navigate('/order-tracking')}
+              className="header__nav-button"
+            >
+              orders
+            </button>
           </nav>
 
           {/* Auth Buttons (only if NOT logged in) */}
