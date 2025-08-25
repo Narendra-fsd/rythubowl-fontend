@@ -71,8 +71,6 @@ const Register = () => {
         }, 1500);
       })
       .catch((error) => {
-        console.error('Registration failed:', error);
-        // Show error toast notification
         showErrorNotification(
           error.message || 'Registration failed. Please try again.'
         );

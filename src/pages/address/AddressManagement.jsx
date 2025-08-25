@@ -16,11 +16,6 @@ const AddressPage = () => {
 
   const [dummiAddress, setDummyAddress] = useState({});
 
-  console.log('Cart:', cart);
-  console.log('Delivery Option:', deliveryOption);
-  console.log('Payment Method:', paymentMethod);
-  console.log('Amount:', amount);
-
   const [customerDetails, setCustomerDetails] = useState({
     name: '',
     phone: '',
@@ -28,8 +23,6 @@ const AddressPage = () => {
   });
 
   const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-
-  console.log('User Details:', userDetails);
 
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -125,7 +118,6 @@ const AddressPage = () => {
       );
       if (response.data) {
         setAddresses(response.data);
-        console.log('Address fetched:', response);
       } else {
         console.error('No address found');
       }
@@ -196,9 +188,6 @@ const AddressPage = () => {
       },
     });
   };
-  console.log('fetched address', addresses);
-  console.log('selected address id', selectedAddressId);
-  console.log('customer details', customerDetails);
   return (
     <div className="address-page-container">
       <h2 className="page-title">Delivery Information</h2>

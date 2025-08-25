@@ -18,7 +18,6 @@ const Payment = () => {
     OrderItems: OrderItems, // Example order items, replace with actual order items logic],
     // Example order items, replace with actual order items logic
   });
-  console.log('Order Details:', orderDetails);
   const [razorpayKey, setRazorpayKey] = useState('');
   const [loading, setLoading] = useState(false);
 

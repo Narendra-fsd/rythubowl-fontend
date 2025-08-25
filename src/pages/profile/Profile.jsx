@@ -9,8 +9,10 @@ import {
   message,
   Divider,
   Spin,
+  Dropdown,
+  Menu,
 } from 'antd';
-import { User, Mail, Phone, Save, Edit } from 'lucide-react';
+import { User, Mail, Phone, Save, Edit, LogOut, Settings } from 'lucide-react';
 import { updateProfileApi, getProfileApi } from '../../api/userApi';
 import Header from '../../components/Header';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +24,7 @@ const Profile = () => {
   const [fetching, setFetching] = useState(true);
   const [editing, setEditing] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [avatarHover, setAvatarHover] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +46,14 @@ const Profile = () => {
     } finally {
       setFetching(false);
     }
+  };
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userDetails');
+    navigate('/login');
+    message.success('Logged out successfully');
   };
 
   const onFinish = async (values) => {
@@ -70,14 +81,28 @@ const Profile = () => {
     }
   };
 
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: 'logout',
+          label: 'Logout',
+          icon: <LogOut size={16} />,
+          onClick: handleLogout,
+          style: { color: '#e74c3c' },
+        },
+      ]}
+    />
+  );
+
   if (fetching) {
     return (
       <>
         <Header />
-        <div className="profile-container">
-          <div className="profile-content">
-            <Card className="profile-card">
-              <div className="loading-spinner">
+        <div className="profile-page-container">
+          <div className="profile-page-content">
+            <Card className="profile-page-card">
+              <div className="profile-page-loading">
                 <Spin size="large" />
                 <p>Loading your profile...</p>
               </div>
@@ -91,31 +116,43 @@ const Profile = () => {
   return (
     <>
       <Header />
-      <div className="profile-container">
-        <div className="profile-content">
-          <Card className="profile-card">
-            <div className="profile-header">
-              <div className="avatar-section">
-                <Avatar
-                  size={100}
-                  className="profile-avatar-large"
-                  style={{
-                    backgroundColor: '#1890ff',
-                    fontSize: '40px',
-                    fontWeight: 'bold',
-                  }}
+      <div className="profile-page-container">
+        <div className="profile-page-content">
+          <Card className="profile-page-card">
+            <div className="profile-page-header">
+              <div className="profile-page-avatar-section">
+                <Dropdown
+                  overlay={menu}
+                  trigger={['click']}
+                  placement="bottomRight"
                 >
-                  {userData?.name ? userData.name.charAt(0).toUpperCase() : 'U'}
-                </Avatar>
-                <h2 className="profile-name">{userData?.name || 'User'}</h2>
-                <p className="profile-email">{userData?.email || ''}</p>
+                  <Avatar
+                    size={100}
+                    className="profile-page-avatar-large"
+                    style={{
+                      backgroundColor: avatarHover ? '#3a5a40' : '#588157',
+                      color: avatarHover ? 'white' : '#2c2c2c',
+                      fontSize: '40px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={() => setAvatarHover(true)}
+                    onMouseLeave={() => setAvatarHover(false)}
+                  >
+                    {userData?.name ? userData.name.charAt(0).toUpperCase() : 'U'}
+                  </Avatar>
+                </Dropdown>
+                <h2 className="profile-page-name">{userData?.name || 'User'}</h2>
+                <p className="profile-page-email">{userData?.email || ''}</p>
               </div>
 
               <Button
                 type={editing ? 'default' : 'primary'}
                 icon={editing ? <Edit size={16} /> : <Edit size={16} />}
                 onClick={() => setEditing(!editing)}
-                className="edit-button"
+                className="profile-page-edit-button"
+                style={{ backgroundColor: editing ? '' : '#588157', borderColor: '#588157' }}
               >
                 {editing ? 'Cancel' : 'Edit Profile'}
               </Button>
@@ -127,10 +164,10 @@ const Profile = () => {
               form={form}
               layout="vertical"
               onFinish={onFinish}
-              className="profile-form"
+              className="profile-page-form"
             >
-              <div className="form-section">
-                <h3 className="section-title">Personal Information</h3>
+              <div className="profile-page-form-section">
+                <h3 className="profile-page-section-title">Personal Information</h3>
 
                 <Form.Item
                   name="name"
@@ -142,7 +179,7 @@ const Profile = () => {
                   <Input
                     prefix={<User size={16} />}
                     disabled={!editing}
-                    className="profile-input"
+                    className="profile-page-input"
                     placeholder="Enter your full name"
                   />
                 </Form.Item>
@@ -151,7 +188,7 @@ const Profile = () => {
                   <Input
                     prefix={<Mail size={16} />}
                     disabled={true}
-                    className="profile-input disabled-input"
+                    className="profile-page-input profile-page-disabled-input"
                     placeholder="Your email address"
                   />
                 </Form.Item>
@@ -169,20 +206,21 @@ const Profile = () => {
                   <Input
                     prefix={<Phone size={16} />}
                     disabled={!editing}
-                    className="profile-input"
+                    className="profile-page-input"
                     placeholder="Enter your phone number"
                   />
                 </Form.Item>
               </div>
 
               {editing && (
-                <div className="form-actions">
+                <div className="profile-page-form-actions">
                   <Button
                     type="primary"
                     htmlType="submit"
                     loading={loading}
                     icon={<Save size={16} />}
-                    className="save-button"
+                    className="profile-page-save-button"
+                    style={{ backgroundColor: '#3a5a40', borderColor: '#3a5a40' }}
                   >
                     Save Changes
                   </Button>

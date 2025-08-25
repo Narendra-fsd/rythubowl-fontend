@@ -37,7 +37,6 @@ const CheckoutPage = () => {
   //   navigate('/payment', { state: { amount } });
   // };
   const handleCheckout = () => {
-    console.log('Checkout initiated');
     const amount = calculateTotal();
 
     navigate('/address', {

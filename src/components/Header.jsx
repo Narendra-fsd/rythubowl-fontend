@@ -97,7 +97,13 @@ const Header = () => {
             <div className="header__auth-buttons">
               <Dropdown>
                 <Dropdown.Toggle as={CustomToggle}>
-                  <div className="profile-avatar">
+                  <div 
+                    className="profile-avatar"
+                    style={{
+                      backgroundColor: '#3a5a40',
+                      color: 'white'
+                    }}
+                  >
                     {userDetails?.name
                       ? userDetails.name.charAt(0).toUpperCase()
                       : 'U'}
