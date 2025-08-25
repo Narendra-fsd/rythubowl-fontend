@@ -68,10 +68,10 @@ const Header = () => {
               Products
             </button>
             <button
-              onClick={() => navigate('/order-tracking')}
+              onClick={() => navigate('/my-orders')}
               className="header__nav-button"
             >
-              orders
+              my orders
             </button>
           </nav>
 
@@ -97,11 +97,11 @@ const Header = () => {
             <div className="header__auth-buttons">
               <Dropdown>
                 <Dropdown.Toggle as={CustomToggle}>
-                  <div 
+                  <div
                     className="profile-avatar"
                     style={{
                       backgroundColor: '#3a5a40',
-                      color: 'white'
+                      color: 'white',
                     }}
                   >
                     {userDetails?.name

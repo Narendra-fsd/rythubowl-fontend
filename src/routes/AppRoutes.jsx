@@ -19,6 +19,7 @@ import PaymentFailed from '../pages/payment/paymentFailed';
 import OrderTracking from '../pages/orders/OrderTracking';
 import Profile from '../pages/profile/Profile'; // Make sure this path is correct
 import { ProtectedRoute } from '../routes/ProtectedRoute';
+import MyOrders from '../pages/orders/MyOrders';
 
 const AppRoutes = () => {
   useEffect(() => {
@@ -41,6 +42,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <ProductManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-orders"
+        element={
+          <ProtectedRoute>
+            <MyOrders />
           </ProtectedRoute>
         }
       />
