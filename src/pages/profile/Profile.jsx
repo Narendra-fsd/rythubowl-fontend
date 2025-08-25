@@ -1,172 +1,199 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile, updateProfile } from "../redux/user/userThunks";
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  Form,
+  Input,
+  Button,
+  Card,
+  Avatar,
+  message,
+  Divider,
+  Spin,
+} from 'antd';
+import { User, Mail, Phone, Save, Edit } from 'lucide-react';
+import { updateProfileApi, getProfileApi } from '../../api/userApi';
+import Header from '../../components/Header';
+import { useNavigate } from 'react-router-dom';
+import './Profile.css';
 
-const ProfilePage = () => {
-  const dispatch = useDispatch();
-  const { user, loading, error, successMessage } = useSelector((state) => state.user);
-
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    addresses: [],
-  });
+const Profile = () => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchProfile());
-  }, [dispatch]);
+    fetchUserProfile();
+  }, []);
 
-  useEffect(() => {
-    if (user) {
-      setForm({
-        name: user.name || "",
-        phone: user.phone || "",
-        addresses: user.addresses || [],
+  const fetchUserProfile = async () => {
+    try {
+      setFetching(true);
+      const response = await getProfileApi();
+      setUserData(response.data);
+      form.setFieldsValue({
+        name: response.data.name,
+        email: response.data.email,
+        phone: response.data.phone,
       });
+    } catch (error) {
+      message.error('Failed to fetch profile data');
+    } finally {
+      setFetching(false);
     }
-  }, [user]);
-
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleAddressChange = (index, e) => {
-    const newAddresses = [...form.addresses];
-    newAddresses[index][e.target.name] = e.target.value;
-    setForm({ ...form, addresses: newAddresses });
   };
 
-  const addAddress = () => {
-    setForm({
-      ...form,
-      addresses: [
-        ...form.addresses,
-        { street: "", city: "", state: "", zip: "", landmark: "" },
-      ],
-    });
+  const onFinish = async (values) => {
+    setLoading(true);
+    try {
+      const response = await updateProfileApi(values);
+      message.success('Profile updated successfully!');
+      setUserData(response.data.user);
+      setEditing(false);
+
+      // Update localStorage with new user details
+      const updatedUserDetails = {
+        ...JSON.parse(localStorage.getItem('userDetails') || '{}'),
+        name: values.name,
+        phone: values.phone,
+      };
+      localStorage.setItem('userDetails', JSON.stringify(updatedUserDetails));
+
+      // Trigger a custom event to notify header about the update
+      window.dispatchEvent(new Event('userDataUpdated'));
+    } catch (error) {
+      message.error('Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeAddress = (index) => {
-    const newAddresses = form.addresses.filter((_, i) => i !== index);
-    setForm({ ...form, addresses: newAddresses });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(updateProfile(form));
-  };
+  if (fetching) {
+    return (
+      <>
+        <Header />
+        <div className="profile-container">
+          <div className="profile-content">
+            <Card className="profile-card">
+              <div className="loading-spinner">
+                <Spin size="large" />
+                <p>Loading your profile...</p>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow rounded mt-8">
-      <h2 className="text-xl font-bold mb-4">My Profile</h2>
-
-      {error && <p className="text-red-500">{error}</p>}
-      {successMessage && <p className="text-green-500">{successMessage}</p>}
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name */}
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Full Name"
-            className="w-full border p-2 rounded"
-          />
-
-          {/* Phone */}
-          <input
-            type="text"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            placeholder="Phone"
-            className="w-full border p-2 rounded"
-          />
-
-          {/* Addresses */}
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Addresses</h3>
-            {form.addresses.map((addr, index) => (
-              <div
-                key={index}
-                className="border p-3 rounded mb-3 bg-gray-50 relative"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    name="street"
-                    value={addr.street}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    placeholder="Street"
-                    className="border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    name="city"
-                    value={addr.city}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    placeholder="City"
-                    className="border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    name="state"
-                    value={addr.state}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    placeholder="State"
-                    className="border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    name="zip"
-                    value={addr.zip}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    placeholder="ZIP Code"
-                    className="border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    name="landmark"
-                    value={addr.landmark}
-                    onChange={(e) => handleAddressChange(index, e)}
-                    placeholder="Landmark"
-                    className="border p-2 rounded"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => removeAddress(index)}
-                  className="absolute top-2 right-2 text-red-600 text-sm"
+    <>
+      <Header />
+      <div className="profile-container">
+        <div className="profile-content">
+          <Card className="profile-card">
+            <div className="profile-header">
+              <div className="avatar-section">
+                <Avatar
+                  size={100}
+                  className="profile-avatar-large"
+                  style={{
+                    backgroundColor: '#1890ff',
+                    fontSize: '40px',
+                    fontWeight: 'bold',
+                  }}
                 >
-                  Remove
-                </button>
+                  {userData?.name ? userData.name.charAt(0).toUpperCase() : 'U'}
+                </Avatar>
+                <h2 className="profile-name">{userData?.name || 'User'}</h2>
+                <p className="profile-email">{userData?.email || ''}</p>
               </div>
-            ))}
 
-            <button
-              type="button"
-              onClick={addAddress}
-              className="px-3 py-2 bg-green-600 text-white rounded"
+              <Button
+                type={editing ? 'default' : 'primary'}
+                icon={editing ? <Edit size={16} /> : <Edit size={16} />}
+                onClick={() => setEditing(!editing)}
+                className="edit-button"
+              >
+                {editing ? 'Cancel' : 'Edit Profile'}
+              </Button>
+            </div>
+
+            <Divider />
+
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={onFinish}
+              className="profile-form"
             >
-              + Add Address
-            </button>
-          </div>
+              <div className="form-section">
+                <h3 className="section-title">Personal Information</h3>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          >
-            {loading ? "Updating..." : "Update Profile"}
-          </button>
-        </form>
-      )}
-    </div>
+                <Form.Item
+                  name="name"
+                  label="Full Name"
+                  rules={[
+                    { required: true, message: 'Please enter your name' },
+                  ]}
+                >
+                  <Input
+                    prefix={<User size={16} />}
+                    disabled={!editing}
+                    className="profile-input"
+                    placeholder="Enter your full name"
+                  />
+                </Form.Item>
+
+                <Form.Item name="email" label="Email Address">
+                  <Input
+                    prefix={<Mail size={16} />}
+                    disabled={true}
+                    className="profile-input disabled-input"
+                    placeholder="Your email address"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="phone"
+                  label="Phone Number"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your phone number',
+                    },
+                  ]}
+                >
+                  <Input
+                    prefix={<Phone size={16} />}
+                    disabled={!editing}
+                    className="profile-input"
+                    placeholder="Enter your phone number"
+                  />
+                </Form.Item>
+              </div>
+
+              {editing && (
+                <div className="form-actions">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={loading}
+                    icon={<Save size={16} />}
+                    className="save-button"
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              )}
+            </Form>
+          </Card>
+        </div>
+      </div>
+    </>
   );
 };
 
-export default ProfilePage;
+export default Profile;

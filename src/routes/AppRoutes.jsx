@@ -17,10 +17,9 @@ import AddressManagement from '../pages/address/AddressManagement';
 import PaymentSuccess from '../pages/payment/PaymentSuccess';
 import PaymentFailed from '../pages/payment/paymentFailed';
 import OrderTracking from '../pages/orders/OrderTracking';
-
+import Profile from '../pages/profile/Profile'; // Make sure this path is correct
 import { ProtectedRoute } from '../routes/ProtectedRoute';
 
-// We’ll add protected routes and dashboards later
 const AppRoutes = () => {
   useEffect(() => {
     window.scrollTo({
@@ -28,6 +27,7 @@ const AppRoutes = () => {
       top: 0,
     });
   }, [location.pathname]);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -35,6 +35,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
+      {/* Protected Routes */}
       <Route
         path="/product"
         element={
@@ -59,12 +60,45 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/address"
+        element={
+          <ProtectedRoute>
+            <AddressManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment"
+        element={
+          <ProtectedRoute>
+            <Payment />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/address" element={<AddressManagement />} />
-      <Route path="/payment" element={<Payment />} />
+      {/* Public routes for payment results */}
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/payment-failed" element={<PaymentFailed />} />
+
+      {/* Redirect any unknown routes to home */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

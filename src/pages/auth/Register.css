@@ -145,3 +145,32 @@
     font-size: 24px;
   }
 }
+
+/* Notification styling */
+.ant-notification {
+  z-index: 9999;
+}
+
+.ant-notification-notice {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ant-notification-notice-success {
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f;
+}
+
+.ant-notification-notice-error {
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+}
+
+.ant-notification-notice-message {
+  font-weight: 600;
+  color: var(--dark-green);
+}
+
+.ant-notification-notice-description {
+  color: var(--text-gray);
+}

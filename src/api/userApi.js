@@ -1,14 +1,15 @@
-import axiosInstance from "./axiosInstance";
+import axiosInstance from './axiosInstance';
 
 // Get logged-in user profile
-export const getProfileApi = () => axiosInstance.get("/users/me");
+export const getProfileApi = () => {
+  const token = localStorage.getItem('token');
+  return axiosInstance.get('/users/me');
+};
 
 // Update logged-in user profile
-export const updateProfileApi = (data) =>
-  axiosInstance.put("/users/me", data);
+export const updateProfileApi = (data) => {
+  return axiosInstance.put('/users/me', data);
+};
 
-// SuperAdmin only
-export const getAllUsersApi = () => axiosInstance.get("/users");
-
-// SuperAdmin only
+export const getAllUsersApi = () => axiosInstance.get('/users');
 export const deleteUserApi = (id) => axiosInstance.delete(`/users/${id}`);

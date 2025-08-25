@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button, Alert } from 'antd';
+import { Card, Button, Alert, notification } from 'antd'; // Added notification import
 import { registerUser } from '../../features/auth/authThunks';
 import './Register.css';
 import Header from '../../components/Header';
@@ -30,11 +30,36 @@ const Register = () => {
       .required('Password is required'),
   });
 
+  // Function to show success notification
+  const showSuccessNotification = (message) => {
+    notification.success({
+      message: 'Success',
+      description: message,
+      placement: 'topRight',
+      duration: 5,
+    });
+  };
+
+  // Function to show error notification
+  const showErrorNotification = (message) => {
+    notification.error({
+      message: 'Error',
+      description: message,
+      placement: 'topRight',
+      duration: 5,
+    });
+  };
+
   const handleSubmit = (values) => {
     dispatch(registerUser(values))
       .unwrap()
       .then((response) => {
         setShowSuccess(true);
+        // Show success toast notification
+        showSuccessNotification(
+          response.message || 'Registration successful! Please login.'
+        );
+
         // Redirect to login after a short delay
         setTimeout(() => {
           navigate('/login', {
@@ -47,6 +72,10 @@ const Register = () => {
       })
       .catch((error) => {
         console.error('Registration failed:', error);
+        // Show error toast notification
+        showErrorNotification(
+          error.message || 'Registration failed. Please try again.'
+        );
       });
   };
 

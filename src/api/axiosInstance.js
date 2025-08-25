@@ -5,6 +5,7 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+// Request interceptor to add auth token
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -16,11 +17,14 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Response interceptor to handle auth errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('userDetails');
       window.location.href = '/login';
     }
     return Promise.reject(error);

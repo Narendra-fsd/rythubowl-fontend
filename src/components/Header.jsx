@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Menu, UserRoundPlus } from 'lucide-react';
-import { Button } from 'react-bootstrap';
+import { User, Menu, UserRoundPlus, LogOut, UserCog } from 'lucide-react';
+import { Button, Dropdown } from 'react-bootstrap';
 import Logo from '../assets/rythubowl-logo.png';
 import '../components/Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem('isAuthenticated');
-  const token = localStorage.getItem('token');
 
-  // Check if user is logged in (e.g., token in localStorage)
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   setIsAuthenticated(!!token);
-  // }, []);
+  useEffect(() => {
+    const userData = localStorage.getItem('userDetails');
+    if (userData) {
+      setUserDetails(JSON.parse(userData));
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -24,6 +24,19 @@ const Header = () => {
     localStorage.removeItem('userDetails');
     navigate('/');
   };
+
+  const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <button
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+      className="profile-avatar-toggle"
+    >
+      {children}
+    </button>
+  ));
 
   return (
     <header className="header">
@@ -62,7 +75,7 @@ const Header = () => {
             </button>
           </nav>
 
-          {/* Auth Buttons (only if NOT logged in) */}
+          {/* Auth Buttons */}
           {!isAuthenticated ? (
             <div className="header__auth-buttons">
               <button
@@ -82,12 +95,33 @@ const Header = () => {
             </div>
           ) : (
             <div className="header__auth-buttons">
-              <button
-                onClick={handleLogout}
-                className="btn header__signup-button"
-              >
-                Logout
-              </button>
+              <Dropdown>
+                <Dropdown.Toggle as={CustomToggle}>
+                  <div className="profile-avatar">
+                    {userDetails?.name
+                      ? userDetails.name.charAt(0).toUpperCase()
+                      : 'U'}
+                  </div>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu align="end" className="profile-dropdown">
+                  <Dropdown.Item
+                    onClick={() => navigate('/profile')}
+                    className="profile-dropdown-item"
+                  >
+                    <UserCog size={16} />
+                    <span>Edit Profile</span>
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item
+                    onClick={handleLogout}
+                    className="profile-dropdown-item"
+                  >
+                    <LogOut size={16} />
+                    <span>Logout</span>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           )}
 
@@ -157,10 +191,19 @@ const Header = () => {
                 <div className="header__mobile-auth-buttons">
                   <Button
                     onClick={() => {
-                      handleLogout();
+                      navigate('/profile');
                       setIsMenuOpen(false);
                     }}
                     className="btn header__mobile-login-button"
+                  >
+                    Profile
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="btn header__mobile-signup-button"
                   >
                     Logout
                   </Button>
