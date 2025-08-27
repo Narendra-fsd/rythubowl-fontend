@@ -2,7 +2,6 @@ import axiosInstance from './axiosInstance';
 
 // Get logged-in user profile
 export const getProfileApi = () => {
-  const token = localStorage.getItem('token');
   return axiosInstance.get('/users/me');
 };
 
