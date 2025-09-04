@@ -5,8 +5,10 @@ import Footer from '../components/Footer';
 import { Leaf, ShoppingBasket, Users, Truck } from 'lucide-react';
 import '../components/About.css';
 import Aboutimg from '../assets/About-img.png';
+import { useNavigate } from 'react-router-dom';
 
 const AboutPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="about-page">
       <Header />
@@ -145,7 +147,7 @@ const AboutPage = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => (window.location.href = '/shop')}
+            onClick={() => (window.location.href = '/product')}
             className="about-cta-button"
           >
             Shop Now

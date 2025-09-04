@@ -177,7 +177,7 @@ const ProductManagement = () => {
               <div className="header-controls">
                 {/* Search Bar */}
                 <div className="search-container">
-                  <Search className="search-icon" />
+                  {/* <Search className="search-icon" /> */}
                   <input
                     type="text"
                     placeholder="Search products..."

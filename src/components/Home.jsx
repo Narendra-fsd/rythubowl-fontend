@@ -46,25 +46,25 @@ const HomePage = () => {
 
   const testimonials = [
     {
-      name: 'Priya Sharma',
-      route: 'Hyderabad',
+      name: 'Ramesh Naik',
+      route: 'Banganapalle, Andhra Pradesh',
       rating: 5,
       comment:
-        'The vegetables were so fresh and the country chicken was amazing. RythuBowl truly delivers farm-to-home quality!',
+        'Known for its premium Banginapalli mangoes with rich flavor and aroma.',
     },
     {
-      name: 'Raj Patel',
-      route: 'Bangalore',
+      name: 'Savita Reddy',
+      route: 'Nalgonda, Telangana',
       rating: 5,
       comment:
-        'I ordered fresh fish and fruits. Everything arrived neatly packed, fresh, and on time. Highly recommend!',
+        'Free-range country chickens raised without antibiotics or hormones.',
     },
     {
-      name: 'Anita Gupta',
-      route: 'Chennai',
+      name: 'Manoj Kumar',
+      route: 'Warangal, Telangana',
       rating: 4,
       comment:
-        'Loved the fruit mix bowls. Perfect for my family’s healthy snacking. Great service!',
+        'Fresh leafy greens and seasonal vegetables grown using natural compost.',
     },
   ];
 

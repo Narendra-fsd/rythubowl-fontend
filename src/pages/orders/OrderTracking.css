@@ -223,6 +223,7 @@ body {
   margin-bottom: 2rem;
   position: relative;
   z-index: 2;
+  transition: all 0.5s ease;
 }
 
 .step-icon {
@@ -236,46 +237,92 @@ body {
   justify-content: center;
   margin-right: 1.2rem;
   flex-shrink: 0;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
+}
+
+.number-container, .tick-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .step-number {
   color: var(--text-gray);
   font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.5s ease;
 }
 
-.completed .step-icon {
+.tick-icon {
+  width: 20px;
+  height: 20px;
+  fill: white;
+  transition: all 0.5s ease;
+}
+
+.progress-step.completed .step-icon {
   background-color: var(--medium-green);
   border-color: var(--medium-green);
+  animation: pulse 0.5s ease;
 }
 
-.completed .checkmark {
-  color: white;
-  font-weight: bold;
-}
-
-.active .step-icon {
+.progress-step.active .step-icon {
   background-color: var(--deep-green);
   border-color: var(--deep-green);
+  animation: pulse 0.5s ease 0.2s;
 }
 
-.active .step-number {
+.progress-step.active .step-number {
   color: white;
 }
 
 .step-info {
   padding-top: 0.3rem;
+  transition: all 0.5s ease;
 }
 
 .step-title {
   font-weight: 600;
   color: var(--text-dark);
   margin-bottom: 0.2rem;
+  transition: all 0.5s ease;
+}
+
+.progress-step.completed .step-title,
+.progress-step.active .step-title {
+  color: var(--deep-green);
 }
 
 .step-description {
   font-size: 0.9rem;
   color: var(--text-gray);
+  transition: all 0.5s ease;
+}
+
+.progress-step.completed .step-description,
+.progress-step.active .step-description {
+  color: var(--medium-green);
+}
+
+/* Progress bar */
+.progress-bar {
+  position: absolute;
+  left: 2.1rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--light-beige);
+  z-index: 1;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--medium-green);
+  transition: width 1s ease;
+  width: 0%;
 }
 
 .back-home-btn {
@@ -338,6 +385,32 @@ body {
   }
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes checkmarkAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-45deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .order-tracking-container {
@@ -367,6 +440,10 @@ body {
   }
   
   .progress-tracker::before {
+    left: 1.6rem;
+  }
+  
+  .progress-bar {
     left: 1.6rem;
   }
 }

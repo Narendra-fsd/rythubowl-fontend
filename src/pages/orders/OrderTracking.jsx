@@ -12,11 +12,47 @@ const OrderTracking = () => {
   const amount = location.state?.amount || '';
   const paymentId = location.state?.paymentId || '';
   const [isVisible, setIsVisible] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0); // 0: Order Placed, 1: Processing, etc.
 
   const OrderItems = orderDetails.OrderItems || [];
+  
+  // Define order steps
+  const orderSteps = [
+    {
+      title: "Order Placed",
+      description: "Your order has been received"
+    },
+    {
+      title: "Processing",
+      description: "Preparing your order"
+    },
+    {
+      title: "Shipped",
+      description: "On the way to you"
+    },
+    {
+      title: "Delivered",
+      description: "Order completed"
+    }
+  ];
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // Set up the interval for automatic progression
+    const interval = setInterval(() => {
+      setCurrentStep(prevStep => {
+        if (prevStep < orderSteps.length - 1) {
+          return prevStep + 1;
+        } else {
+          clearInterval(interval); // Stop at the final step
+          return prevStep;
+        }
+      });
+    }, 5000); // 5 seconds
+
+    // Clean up interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   const handleBackToHome = () => {
@@ -92,44 +128,31 @@ const OrderTracking = () => {
         <div className="progress-container">
           <h3 className="section-title">Order Status</h3>
           <div className="progress-tracker">
-            <div className="progress-step completed">
-              <div className="step-icon">
-                <span className="checkmark">✓</span>
+            {orderSteps.map((step, index) => (
+              <div 
+                key={index} 
+                className={`progress-step ${index < currentStep ? 'completed' : ''} ${index === currentStep ? 'active' : ''}`}
+              >
+                <div className="step-icon">
+                  {index <= currentStep ? (
+                    <span className="checkmark">✓</span>
+                  ) : (
+                    <span className="step-number">{index + 1}</span>
+                  )}
+                </div>
+                <div className="step-info">
+                  <p className="step-title">{step.title}</p>
+                  <p className="step-description">{step.description}</p>
+                </div>
               </div>
-              <div className="step-info">
-                <p className="step-title">Order Placed</p>
-                <p className="step-description">Your order has been received</p>
-              </div>
-            </div>
-
-            <div className="progress-step active">
-              <div className="step-icon">
-                <span className="step-number">2</span>
-              </div>
-              <div className="step-info">
-                <p className="step-title">Processing</p>
-                <p className="step-description">Preparing your order</p>
-              </div>
-            </div>
-
-            <div className="progress-step">
-              <div className="step-icon">
-                <span className="step-number">3</span>
-              </div>
-              <div className="step-info">
-                <p className="step-title">Shipped</p>
-                <p className="step-description">On the way to you</p>
-              </div>
-            </div>
-
-            <div className="progress-step">
-              <div className="step-icon">
-                <span className="step-number">4</span>
-              </div>
-              <div className="step-info">
-                <p className="step-title">Delivered</p>
-                <p className="step-description">Order completed</p>
-              </div>
+            ))}
+            
+            {/* Progress bar */}
+            <div className="progress-bar">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${(currentStep / (orderSteps.length - 1)) * 100}%` }}
+              ></div>
             </div>
           </div>
         </div>

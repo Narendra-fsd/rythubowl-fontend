@@ -310,7 +310,7 @@
  
 .btn-secondary:hover {
     background: var(--secondary-green);
-    color: white;
+    color: var(--dark-green);
     transform: translateY(-4px) scale(1.05);
     box-shadow: 0 15px 35px rgba(139, 168, 136, 0.4);
 }
