@@ -190,9 +190,9 @@ const HomePage = () => {
       <section className="testimonials-section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Happy Customers</h2>
+            <h2 className="section-title">Proud Farmers</h2>
             <p className="section-description">
-              See what people love about RythuBowl
+              See what farmers love about RythuBowl
             </p>
           </div>
 

@@ -320,7 +320,7 @@ const ProductManagement = () => {
         </div>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
